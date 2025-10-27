@@ -20,6 +20,7 @@ knitr::opts_chunk$set(echo = TRUE)
 3\. Annual water balance ET (computed as P-Q per year)
 
 ## Libraries
+
 ```{r}
 
 library(tidyverse)     # collection of R packages designed for data science
@@ -33,16 +34,66 @@ library(here)          # for file paths relative to the project root
 
 ```{r}
 
-
+# Read in the sample data
+sample_watershed <- read.csv(here("Data", "sample_watershed_WBET.csv"))
 
 ```
 
+**Columns:**
+
+**TC_ET_mm** = computed water balance ET using precipitation from TerraClimate
+
+**PRISM_ET_mm** = computed water balance ET using precipitation from PRISM
+
+**Daymet_ET_mm** = computed water balance ET using precipitation from Daymet
+
+```{r}
+
+# Example: TC_ET_mm
+
+# Compute for the mean ET
+WBET_mean <- mean(sample_watershed$TC_ET_mm, na.rm = TRUE)
+  
+# Compute for mean - 2SD (standard deviation)
+WBET_sd <- 2 * sd(sample_watershed$TC_ET_mm, na.rm = TRUE)
+  
+# Set the thresholds
+Threshold_low <- WBET_mean - WBET_sd
+Threshold_high <- WBET_mean + WBET_sd
+
+# Filter the data based on the threshold:
+  
+# Normal data
+
+WBET_normal <- sample_watershed %>% 
+  # Low ET:
+  filter(TC_ET_mm > Threshold_low) %>% 
+  # High ET
+  filter(TC_ET_mm < Threshold_high)
+
+# Abnormal data, low:
+WBET_abnormal_low <- sample_watershed %>% 
+  filter(!is.na(TC_ET_mm)) %>% 
+  filter(TC_ET_mm < Threshold_low)
+  
+# Abnormal data, high:
+WBET_abnormal_high <- sample_watershed %>% 
+  filter(!is.na(TC_ET_mm)) %>% 
+  filter(TC_ET_mm > Threshold_high)
+  
+# Compute for anomaly and normalize the data
+WBET_normal <- WBET_normal %>% 
+  mutate(TC_ET_mm_anomaly = (TC_ET_mm - mean(WBET_normal$TC_ET_mm, na.rm = TRUE)),
+         TC_ET_mm_normalized = TC_ET_mm_anomaly / sd(TC_ET_mm, na.rm = TRUE))
+
+```
+
+The same workflow was applied in normalizing the data sets of potential WBET explanatory variables.
 
 ## Data 2: 190 sites
 
 ```{r}
 
-data_sites <- read.csv(here("Data", "data_sites.csv"))
+sites <- read.csv(here("Data", "sites.csv"))
 
 ```
-
