@@ -122,10 +122,3 @@ PRISM_WBET_adjr2 <- summary(PRISM_lm)$adj.r.squared         # model's adjusted R
 
 These values should be saved for each watershed.
 
-### b. Regression between explanatory variable (x) and water balance ET (y)
-
-```{r}
-
-
-```
-
