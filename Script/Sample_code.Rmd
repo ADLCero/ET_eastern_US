@@ -35,7 +35,7 @@ library(here)          # for file paths relative to the project root
 ```{r}
 
 # Read in the sample data
-sample_watershed <- read.csv(here("Data", "sample_watershed_WBET.csv"))
+WBET_data <- read.csv(here("Data", "sample_watershed_WBET.csv"))
 
 ```
 
@@ -52,10 +52,10 @@ sample_watershed <- read.csv(here("Data", "sample_watershed_WBET.csv"))
 # Example: TC_ET_mm
 
 # Compute for the mean ET
-WBET_mean <- mean(sample_watershed$TC_ET_mm, na.rm = TRUE)
+WBET_mean <- mean(WBET_data$TC_ET_mm, na.rm = TRUE)
   
 # Compute for mean - 2SD (standard deviation)
-WBET_sd <- 2 * sd(sample_watershed$TC_ET_mm, na.rm = TRUE)
+WBET_sd <- 2 * sd(WBET_data$TC_ET_mm, na.rm = TRUE)
   
 # Set the thresholds
 Threshold_low <- WBET_mean - WBET_sd
@@ -65,19 +65,19 @@ Threshold_high <- WBET_mean + WBET_sd
   
 # Normal data
 
-WBET_normal <- sample_watershed %>% 
+WBET_normal <- WBET_data %>% 
   # Low ET:
   filter(TC_ET_mm > Threshold_low) %>% 
   # High ET
   filter(TC_ET_mm < Threshold_high)
 
 # Abnormal data, low:
-WBET_abnormal_low <- sample_watershed %>% 
+WBET_abnormal_low <- WBET_data %>% 
   filter(!is.na(TC_ET_mm)) %>% 
   filter(TC_ET_mm < Threshold_low)
   
 # Abnormal data, high:
-WBET_abnormal_high <- sample_watershed %>% 
+WBET_abnormal_high <- WBET_data %>% 
   filter(!is.na(TC_ET_mm)) %>% 
   filter(TC_ET_mm > Threshold_high)
   
@@ -97,3 +97,12 @@ The same workflow was applied in normalizing the data sets of potential WBET exp
 sites <- read.csv(here("Data", "sites.csv"))
 
 ```
+
+## a. Computation of slopes
+
+```{r}
+
+# Order the data frame
+
+```
+
