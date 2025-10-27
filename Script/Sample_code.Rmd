@@ -32,6 +32,8 @@ library(here)          # for file paths relative to the project root
 
 ### a. Computation for the "abnormal" water balance ET
 
+**Sample site:** USGS 1019000 Grand Lake Stream at Grand Lake Stream, Maine
+
 ```{r}
 
 # Read in the sample data
@@ -49,13 +51,13 @@ WBET_data <- read.csv(here("Data", "sample_watershed_WBET.csv"))
 
 ```{r}
 
-# Example: TC_ET_mm
+# Example: Using PRISM_ET_mm
 
 # Compute for the mean ET
-WBET_mean <- mean(WBET_data$TC_ET_mm, na.rm = TRUE)
+WBET_mean <- mean(WBET_data$PRISM_ET_mm, na.rm = TRUE)
   
 # Compute for mean - 2SD (standard deviation)
-WBET_sd <- 2 * sd(WBET_data$TC_ET_mm, na.rm = TRUE)
+WBET_sd <- 2 * sd(WBET_data$PRISM_ET_mm, na.rm = TRUE)
   
 # Set the thresholds
 Threshold_low <- WBET_mean - WBET_sd
@@ -67,24 +69,24 @@ Threshold_high <- WBET_mean + WBET_sd
 
 WBET_normal <- WBET_data %>% 
   # Low ET:
-  filter(TC_ET_mm > Threshold_low) %>% 
+  filter(PRISM_ET_mm > Threshold_low) %>% 
   # High ET
-  filter(TC_ET_mm < Threshold_high)
+  filter(PRISM_ET_mm < Threshold_high)
 
 # Abnormal data, low:
 WBET_abnormal_low <- WBET_data %>% 
-  filter(!is.na(TC_ET_mm)) %>% 
-  filter(TC_ET_mm < Threshold_low)
+  filter(!is.na(PRISM_ET_mm)) %>% 
+  filter(PRISM_ET_mm < Threshold_low)
   
 # Abnormal data, high:
 WBET_abnormal_high <- WBET_data %>% 
-  filter(!is.na(TC_ET_mm)) %>% 
-  filter(TC_ET_mm > Threshold_high)
+  filter(!is.na(PRISM_ET_mm)) %>% 
+  filter(PRISM_ET_mm > Threshold_high)
   
 # Compute for anomaly and normalize the data
 WBET_normal <- WBET_normal %>% 
-  mutate(TC_ET_mm_anomaly = (TC_ET_mm - mean(WBET_normal$TC_ET_mm, na.rm = TRUE)),
-         TC_ET_mm_normalized = TC_ET_mm_anomaly / sd(TC_ET_mm, na.rm = TRUE))
+  mutate(PRISM_ET_mm_anomaly = (PRISM_ET_mm - mean(WBET_normal$PRISM_ET_mm, na.rm = TRUE)),
+         PRISM_ET_mm_normalized = PRISM_ET_mm_anomaly / sd(PRISM_ET_mm, na.rm = TRUE))
 
 ```
 
@@ -98,11 +100,24 @@ sites <- read.csv(here("Data", "sites.csv"))
 
 ```
 
-## a. Computation of slopes
+### a. Computation of slopes
 
 ```{r}
 
+# Using the WBET data without abnormal WBET:
+
 # Order the data frame
+WBET_normal <- WBET_normal[order(WBET_normal$water_year), ]
+
+# Do linear regression (based on PRISM WBET)
+PRISM_lm <- lm(WBET_normal$PRISM_ET_mm ~ WBET_normal$water_year)
+
+# Save the important components of the results
+PRISM_WBET_intercept <- unname(coef(PRISM_lm)[1])           # intercept
+PRISM_WBET_lm_slope <- unname(coef(PRISM_lm)[2])            # slope
+PRISM_WBET_slope_p <- summary(PRISM_lm)$coefficients[2,4]   # p-value of the slope
+PRISM_WBET_adjr2 <- summary(PRISM_lm)$adj.r.squared         # model's adjusted R2
 
 ```
 
+These values should be saved for each watershed.
