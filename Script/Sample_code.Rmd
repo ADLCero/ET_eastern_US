@@ -1,0 +1,28 @@
+---
+title: "Sample code"
+author: "Amyel Dale Cero"
+date: "2025-10-27"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Sample code for processing the data
+
+**Required data per watershed:**
+
+1\. Annual total precipitation
+
+2\. Annual total discharge (normalized using watershed's area)
+
+3\. Annual water balance ET (computed as P-Q per year)
+
+## Data 1: watershed's annual P, Q, and ET (sample_data_1)
+
+```{r}
+
+
+```
+
