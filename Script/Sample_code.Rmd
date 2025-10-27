@@ -1,7 +1,7 @@
 ---
-title: "Sample code"
+title: "Sample code for processing water balance ET data"
 author: "Amyel Dale Cero"
-date: "2025-10-27"
+date: "2025-10-26"
 output: html_document
 ---
 
@@ -19,7 +19,25 @@ knitr::opts_chunk$set(echo = TRUE)
 
 3\. Annual water balance ET (computed as P-Q per year)
 
+## Libraries
+```{r}
+
+library(tidyverse)
+
+```
+
 ## Data 1: watershed's annual P, Q, and ET (sample_data_1)
+
+### a. Computation for the "abnormal" water balance ET
+
+```{r}
+
+
+
+```
+
+
+## Data 2: 190 sites
 
 ```{r}
 
