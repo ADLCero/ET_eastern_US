@@ -22,11 +22,12 @@ knitr::opts_chunk$set(echo = TRUE)
 ## Libraries
 ```{r}
 
-library(tidyverse)
+library(tidyverse)     # collection of R packages designed for data science
+library(here)          # for file paths relative to the project root
 
 ```
 
-## Data 1: watershed's annual P, Q, and ET (sample_data_1)
+## Data 1: watershed's annual water balance ET
 
 ### a. Computation for the "abnormal" water balance ET
 
@@ -41,6 +42,7 @@ library(tidyverse)
 
 ```{r}
 
+data_sites <- read.csv(here("Data", "data_sites.csv"))
 
 ```
 

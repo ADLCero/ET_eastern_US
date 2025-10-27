@@ -3,7 +3,7 @@ This repository contains the supporting data and code for the paper **"Analysis 
 **Folders:**
 
 1.  **Data**
-    -   data_sites.csv - list of the 190 watersheds in eastern US used in the study
-    -   data_sample_watershed - sample data of one of the 190 watersheds
+    -   sites.csv - list of the 190 watersheds in eastern US used in the study
+    -   sample_watershed_WBET.csv - sample data of one of the 190 watersheds
 2.  **Script**
     -   Sample_code.Rmd - R Markdown containing the sample code used in processing the data
